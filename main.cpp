@@ -33,7 +33,7 @@ public:
   CDnsSeedOpts() : nThreads(96), nDnsThreads(4), nPort(53), mbox(NULL), ns(NULL), host(NULL), tor(NULL), fUseTestNet(false), fWipeBan(false), fWipeIgnore(false), ipv4_proxy(NULL), ipv6_proxy(NULL) {}
 
   void ParseCommandLine(int argc, char **argv) {
-    static const char *help = "Darkcoin-seeder\n"
+    static const char *help = "energi-seeder\n"
                               "Usage: %s -h <host> -n <ns> [-m <mbox>] [-t <threads>] [-p <port>]\n"
                               "\n"
                               "Options:\n"
@@ -356,13 +356,15 @@ extern "C" void* ThreadStats(void*) {
   } while(1);
 }
 
-static const string mainnet_seeds[] = {"static-dnsseed.darkcoin.io", "static-dnsseed.darkcoin.qa", ""};
-static const string testnet_seeds[] = {"static-testnet-seed.darkcoin.io", "static-testnet-seed.darkcoin.qa", ""};
+// TODO: for now, they're the same, but will be adding more when it's time to launch the mainnet,
+// cause there need to be different seeds for the testnet.
+static const string mainnet_seeds[] = {"seed.energi.world", ""};
+static const string testnet_seeds[] = {"seed.energi.world", ""};
 static const string *seeds = mainnet_seeds;
 
 extern "C" void* ThreadSeeder(void*) {
   if (!fTestNet){
-    db.Add(CService("darkcoin.io", 9999), true);
+    db.Add(CService("seed.energi.world", 9797), true);
   }
   do {
     for (int i=0; seeds[i] != ""; i++) {
@@ -405,10 +407,10 @@ int main(int argc, char **argv) {
   bool fDNS = true;
   if (opts.fUseTestNet) {
       printf("Using testnet.\n");
-      pchMessageStart[0] = 0xce;
-      pchMessageStart[1] = 0xe2;
-      pchMessageStart[2] = 0xca;
-      pchMessageStart[3] = 0xff;
+      pchMessageStart[0] = 0xd9;
+      pchMessageStart[1] = 0x2a;
+      pchMessageStart[2] = 0xab;
+      pchMessageStart[3] = 0x6e;
       seeds = testnet_seeds;
       fTestNet = true;
   }
