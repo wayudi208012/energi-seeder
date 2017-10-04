@@ -359,7 +359,7 @@ extern "C" void* ThreadStats(void*) {
 // TODO: for now, they're the same, but will be adding more when it's time to launch the mainnet,
 // cause there need to be different seeds for the testnet.
 static const string mainnet_seeds[] = {"seed.energi.world", ""};
-static const string testnet_seeds[] = {"seed.energi.world", ""};
+static const string testnet_seeds[] = {"testnet-seed.energi.world", ""};
 static const string *seeds = mainnet_seeds;
 
 extern "C" void* ThreadSeeder(void*) {
