@@ -16,7 +16,8 @@
 
 static inline int GetRequireHeight(const bool testnet = fTestNet)
 {
-    return testnet ? 127606 : 632000;
+  // TODO: eventually update me with a chainheight > 0
+  return testnet ? 0 : 0;
 }
 
 std::string static inline ToString(const CService &ip) {
