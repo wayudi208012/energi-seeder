@@ -203,8 +203,8 @@ public:
     base_uint& operator--()
     {
         // prefix operator
-        int i = 0;
-        while (--pn[i] == -1 && i < WIDTH-1)
+        unsigned int i = 0;
+        while (--pn[i] == static_cast<unsigned int>(-1) && i < WIDTH-1)
             i++;
         return *this;
     }
@@ -301,7 +301,7 @@ public:
     std::string GetHex() const
     {
         char psz[sizeof(pn)*2 + 1];
-        for (int i = 0; i < sizeof(pn); i++)
+        for (unsigned int i = 0; i < sizeof(pn); i++)
             sprintf(psz + i*2, "%02x", ((unsigned char*)pn)[sizeof(pn) - i - 1]);
         return std::string(psz, psz + sizeof(pn)*2);
     }
