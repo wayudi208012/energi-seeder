@@ -14,6 +14,8 @@
 
 #define REQUIRE_VERSION 70208
 
+#define DEBUG_PRINT 1
+
 static inline int GetRequireHeight(const bool testnet = fTestNet)
 {
   // TODO: eventually update me with a chainheight > 0
