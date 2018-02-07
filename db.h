@@ -194,13 +194,15 @@ struct CServiceResult {
     int64 ourLastSuccess;
 };
 
-//             seen nodes
-//            /          \
-// (a) banned nodes       available nodes--------------
-//                       /       |                     \
-//               tracked nodes   (b) unknown nodes   (e) active nodes
-//              /           \
-//     (d) good nodes   (c) non-good nodes
+/*
+                seen nodes
+               /          \
+    (a) banned nodes       available nodes--------------
+                          /       |                     \
+                  tracked nodes   (b) unknown nodes   (e) active nodes
+                 /           \
+        (d) good nodes   (c) non-good nodes
+*/
 
 class CAddrDb {
 private:
