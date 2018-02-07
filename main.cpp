@@ -358,13 +358,13 @@ extern "C" void* ThreadStats(void*) {
 
 // TODO: for now, they're the same, but will be adding more when it's time to launch the mainnet,
 // cause there need to be different seeds for the testnet.
-static const string mainnet_seeds[] = {"seed.energi.world", ""};
-static const string testnet_seeds[] = {"testnet-seed.energi.world", ""};
+static const string mainnet_seeds[] = {"seed.energi.network", ""};
+static const string testnet_seeds[] = {"seed.energi.network", ""};
 static const string *seeds = mainnet_seeds;
 
 extern "C" void* ThreadSeeder(void*) {
   if (!fTestNet){
-    db.Add(CService("seed.energi.world", 9797), true);
+    db.Add(CService("seed.energi.network", 9797), true);
   }
   do {
     for (int i=0; seeds[i] != ""; i++) {
