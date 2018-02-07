@@ -11,18 +11,18 @@
 using namespace std;
 
 class CNode {
-  SOCKET sock;
-  CDataStream vSend;
-  CDataStream vRecv;
+  CAddress you;
   unsigned int nHeaderStart;
   unsigned int nMessageStart;
-  int nVersion;
-  string strSubVer;
-  int nStartingHeight;
   vector<CAddress> *vAddr;
   int ban;
   int64 doneAfter;
-  CAddress you;
+  int nVersion;
+  SOCKET sock;
+  CDataStream vSend;
+  CDataStream vRecv;
+  string strSubVer;
+  int nStartingHeight;
 
   int GetTimeout() {
       if (you.IsTor())
@@ -221,7 +221,20 @@ class CNode {
   }
 
 public:
-  CNode(const CService& ip, vector<CAddress>* vAddrIn) : you(ip), nHeaderStart(-1), nMessageStart(-1), vAddr(vAddrIn), ban(0), doneAfter(0), nVersion(0) {
+  CNode(const CService& ip, vector<CAddress>* vAddrIn)
+  : you(ip)
+  , nHeaderStart(-1)
+  , nMessageStart(-1)
+  , vAddr(vAddrIn)
+  , ban(0)
+  , doneAfter(0)
+  , nVersion(0)
+  , sock(INVALID_SOCKET)
+  , vSend()
+  , vRecv()
+  , strSubVer()
+  , nStartingHeight(0)
+  {
     vSend.SetType(SER_NETWORK);
     vSend.SetVersion(0);
     vRecv.SetType(SER_NETWORK);
