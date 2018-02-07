@@ -41,8 +41,8 @@ bool CAddrDb::Get_(CServiceResult &ip, int &wait) {
     return false;
   }
   do {
-    int rnd = rand() % tot;
-    int ret;
+    unsigned int rnd = rand() % tot;
+    unsigned int ret;
     if (rnd < unkId.size()) {
       set<int>::iterator it = unkId.end(); it--;
       ret = *it;
@@ -186,7 +186,7 @@ void CAddrDb::Add_(const CAddress &addr, bool force) {
   nDirty++;
 }
 
-void CAddrDb::GetIPs_(set<CNetAddr>& ips, int max, const bool* nets) {
+void CAddrDb::GetIPs_(set<CNetAddr>& ips, unsigned int max, const bool* nets) {
   if (goodId.size() == 0) {
     int id = -1;
     if (ourId.size() == 0) {

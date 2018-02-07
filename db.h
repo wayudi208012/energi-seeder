@@ -224,7 +224,7 @@ protected:
   void Bad_(const CService &ip, int ban);  // mark an IP as bad (and optionally ban it) (must have been returned by Get_)
   void Skipped_(const CService &ip);       // mark an IP as skipped (must have been returned by Get_)
   int Lookup_(const CService &ip);         // look up id of an IP
-  void GetIPs_(std::set<CNetAddr>& ips, int max, const bool *nets); // get a random set of IPs (shared lock only)
+  void GetIPs_(std::set<CNetAddr>& ips, unsigned int max, const bool *nets); // get a random set of IPs (shared lock only)
 
 public:
   std::map<CService, time_t> banned; // nodes that are banned, with their unban time (a)
@@ -315,7 +315,7 @@ public:
   }
   void Add(const std::vector<CAddress> &vAddr, bool fForce = false) {
     CRITICAL_BLOCK(cs)
-      for (int i=0; i<vAddr.size(); i++)
+      for (unsigned int i=0; i<vAddr.size(); i++)
         Add_(vAddr[i], fForce);
   }
   void Good(const CService &addr, int clientVersion, std::string clientSubVersion, int blocks) {
@@ -333,6 +333,7 @@ public:
   bool Get(CServiceResult &ip, int& wait) {
     CRITICAL_BLOCK(cs)
       return Get_(ip, wait);
+    return false;
   }
   void GetMany(std::vector<CServiceResult> &ips, int max, int& wait) {
     CRITICAL_BLOCK(cs) {
@@ -347,7 +348,7 @@ public:
   }
   void ResultMany(const std::vector<CServiceResult> &ips) {
     CRITICAL_BLOCK(cs) {
-      for (int i=0; i<ips.size(); i++) {
+      for (unsigned int i=0; i<ips.size(); i++) {
         if (ips[i].fGood) {
           Good_(ips[i].service, ips[i].nClientV, ips[i].strClientV, ips[i].nHeight);
         } else {
@@ -356,7 +357,7 @@ public:
       }
     }
   }
-  void GetIPs(std::set<CNetAddr>& ips, int max, const bool *nets) {
+  void GetIPs(std::set<CNetAddr>& ips, unsigned int max, const bool *nets) {
     SHARED_CRITICAL_BLOCK(cs)
       GetIPs_(ips, max, nets);
   }

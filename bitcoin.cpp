@@ -23,6 +23,7 @@ class CNode {
   CDataStream vRecv;
   string strSubVer;
   int nStartingHeight;
+  static constexpr unsigned int INVALID_HEADER_START = static_cast<unsigned int>(-1);
 
   int GetTimeout() {
       if (you.IsTor())
@@ -32,7 +33,7 @@ class CNode {
   }
 
   void BeginMessage(const char *pszCommand) {
-    if (nHeaderStart != -1) AbortMessage();
+    if (nHeaderStart != INVALID_HEADER_START) AbortMessage();
     nHeaderStart = vSend.size();
     vSend << CMessageHeader(pszCommand, 0);
     nMessageStart = vSend.size();
@@ -42,14 +43,14 @@ class CNode {
   }
 
   void AbortMessage() {
-    if (nHeaderStart == -1) return;
+    if (nHeaderStart == INVALID_HEADER_START) return;
     vSend.resize(nHeaderStart);
     nHeaderStart = -1;
     nMessageStart = -1;
   }
 
   void EndMessage() {
-    if (nHeaderStart == -1) return;
+    if (nHeaderStart == INVALID_HEADER_START) return;
     unsigned int nSize = vSend.size() - nMessageStart;
     memcpy((char*)&vSend[nHeaderStart] + offsetof(CMessageHeader, nMessageSize), &nSize, sizeof(nSize));
     if (vSend.GetVersion() >= 209) {
@@ -172,7 +173,7 @@ class CNode {
     if (vRecv.empty()) return false;
     do {
       CDataStream::iterator pstart = search(vRecv.begin(), vRecv.end(), BEGIN(pchMessageStart), END(pchMessageStart));
-      int nHeaderSize = vRecv.GetSerializeSize(CMessageHeader());
+      unsigned int nHeaderSize = vRecv.GetSerializeSize(CMessageHeader());
       if (vRecv.end() - pstart < nHeaderSize) {
         if (vRecv.size() > nHeaderSize) {
           vRecv.erase(vRecv.begin(), vRecv.end() - nHeaderSize);

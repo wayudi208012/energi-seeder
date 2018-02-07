@@ -171,7 +171,7 @@ extern "C" void* ThreadCrawler(void* data) {
       continue;
     }
     vector<CAddress> addr;
-    for (int i=0; i<ips.size(); i++) {
+    for (unsigned int i=0; i<ips.size(); i++) {
       CServiceResult &res = ips[i];
       res.nBanTime = 0;
       res.nClientV = 0;
@@ -259,7 +259,9 @@ public:
   }
 };
 
-extern "C" int GetIPList(void *data, addr_t* addr, int max, int ipv4, int ipv6) {
+extern "C" int GetIPList(void *data, addr_t* addr, int max_signed, int ipv4, int ipv6) {
+  // the dns server (dns.c) expects this callback function to have a signed param for max even though it does not make much sense
+  unsigned int max = static_cast<unsigned int>(max_signed);
   CDnsThread *thread = (CDnsThread*)data;
   thread->cacheHit();
   unsigned int size = thread->cache.size();
@@ -268,9 +270,9 @@ extern "C" int GetIPList(void *data, addr_t* addr, int max, int ipv4, int ipv6) 
     max = size;
   if (max > maxmax)
     max = maxmax;
-  int i=0;
+  unsigned int i=0;
   while (i<max) {
-    int j = i + (rand() % (size - i));
+    unsigned int j = i + (rand() % (size - i));
     do {
         bool ok = (ipv4 && thread->cache[j].v == 4) ||
                   (ipv6 && thread->cache[j].v == 6);
