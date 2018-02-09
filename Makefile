@@ -1,6 +1,6 @@
 CC = gcc
 CXX = g++
-BASE_FLAGS = -O3 -g0 -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -Wno-sign-compare -Wno-char-subscripts
+BASE_FLAGS = -O3 -g0 -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-variable -Wno-char-subscripts
 CFLAGS = $(BASE_FLAGS) -std=c99
 CXXFLAGS = $(BASE_FLAGS) -std=c++11
 LDFLAGS = $(CFLAGS) -pthread -lcrypto

@@ -30,7 +30,22 @@ public:
   const char *ipv4_proxy;
   const char *ipv6_proxy;
 
-  CDnsSeedOpts() : nThreads(96), nDnsThreads(4), nPort(53), mbox(NULL), ns(NULL), host(NULL), tor(NULL), fUseTestNet(false), fWipeBan(false), fWipeIgnore(false), ipv4_proxy(NULL), ipv6_proxy(NULL) {}
+  CDnsSeedOpts()
+  : nThreads(96)
+  , nPort(53)
+  , nDnsThreads(4)
+  , fUseTestNet(false)
+  , fWipeBan(false)
+  , fWipeIgnore(false)
+  , mbox(NULL)
+  , ns(NULL)
+  , host(NULL)
+  , tor(NULL)
+  , ipv4_proxy(NULL)
+  , ipv6_proxy(NULL)
+  {
+
+  }
 
   void ParseCommandLine(int argc, char **argv) {
     static const char *help = "energi-seeder\n"
@@ -156,7 +171,7 @@ extern "C" void* ThreadCrawler(void* data) {
       continue;
     }
     vector<CAddress> addr;
-    for (int i=0; i<ips.size(); i++) {
+    for (unsigned int i=0; i<ips.size(); i++) {
       CServiceResult &res = ips[i];
       res.nBanTime = 0;
       res.nClientV = 0;
@@ -244,7 +259,9 @@ public:
   }
 };
 
-extern "C" int GetIPList(void *data, addr_t* addr, int max, int ipv4, int ipv6) {
+extern "C" int GetIPList(void *data, addr_t* addr, int max_signed, int ipv4, int ipv6) {
+  // the dns server (dns.c) expects this callback function to have a signed param for max even though it does not make much sense
+  unsigned int max = static_cast<unsigned int>(max_signed);
   CDnsThread *thread = (CDnsThread*)data;
   thread->cacheHit();
   unsigned int size = thread->cache.size();
@@ -253,9 +270,9 @@ extern "C" int GetIPList(void *data, addr_t* addr, int max, int ipv4, int ipv6) 
     max = size;
   if (max > maxmax)
     max = maxmax;
-  int i=0;
+  unsigned int i=0;
   while (i<max) {
-    int j = i + (rand() % (size - i));
+    unsigned int j = i + (rand() % (size - i));
     do {
         bool ok = (ipv4 && thread->cache[j].v == 4) ||
                   (ipv6 && thread->cache[j].v == 6);
@@ -277,6 +294,7 @@ vector<CDnsThread*> dnsThread;
 extern "C" void* ThreadDNS(void* arg) {
   CDnsThread *thread = (CDnsThread*)arg;
   thread->run();
+  return NULL;
 }
 
 int StatCompare(const CAddrReport& a, const CAddrReport& b) {
